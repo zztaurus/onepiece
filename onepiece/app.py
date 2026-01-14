@@ -52,20 +52,6 @@ def create_app():
         logger.error(f'    允许的方法: {e.valid_methods}')
         return jsonify({'success': False, 'message': '请求方法不允许'}), 405
 
-    # 提供静态文件
-    @app.route('/')
-    def index():
-        return send_from_directory('static', 'index.html')
-
-    @app.route('/<path:path>')
-    def static_files(path):
-        logger.warning(f'--- 静态文件路由被触发: path={path}')
-        # 排除 api 路径，避免与 API 路由冲突
-        if path.startswith('api/'):
-            logger.warning(f'    api路径进入了静态文件路由，返回404')
-            return jsonify({'success': False, 'message': '接口不存在'}), 404
-        return send_from_directory('static', path)
-
     # 创建表和初始化数据
     with app.app_context():
         init_db()
