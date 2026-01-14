@@ -23,6 +23,8 @@
             --border-color: #3d3a36;
             --card-bg: #faf9f7;
             --shadow-color: rgba(61, 58, 54, 0.15);
+            --success-color: #6b9b6b;
+            --error-color: #9b4d4d;
         }
 
         body {
@@ -47,6 +49,11 @@
         .halftone-bg {
             background-image: radial-gradient(circle, var(--text-secondary) 1px, transparent 1px);
             background-size: 8px 8px;
+        }
+
+        /* ========== 隐藏类 ========== */
+        .hidden {
+            display: none !important;
         }
 
         /* ========== 登录页面 ========== */
@@ -115,7 +122,9 @@
             color: var(--text-secondary);
         }
 
-        .form-group input {
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
             width: 100%;
             padding: 14px 16px;
             border: 2px solid var(--border-color);
@@ -123,15 +132,23 @@
             font-size: 16px;
             background: white;
             transition: all 0.2s ease;
+            font-family: inherit;
         }
 
-        .form-group input:focus {
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
             outline: none;
             box-shadow: 3px 3px 0 var(--border-color);
             transform: translate(-2px, -2px);
         }
 
-        .login-btn {
+        .login-btn, .primary-btn {
             width: 100%;
             padding: 16px;
             background: var(--text-primary);
@@ -147,14 +164,33 @@
             margin-top: 10px;
         }
 
-        .login-btn:hover {
+        .login-btn:hover, .primary-btn:hover {
             transform: translate(-3px, -3px);
             box-shadow: 5px 5px 0 var(--accent-warm);
         }
 
-        .login-btn:active {
+        .login-btn:active, .primary-btn:active {
             transform: translate(0, 0);
             box-shadow: none;
+        }
+
+        .secondary-btn {
+            padding: 12px 24px;
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 2px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .secondary-btn:hover {
+            background: var(--text-primary);
+            color: white;
         }
 
         .message {
@@ -168,8 +204,14 @@
 
         .message.error {
             background: #fdf2f2;
-            color: #9b4d4d;
-            border-color: #9b4d4d;
+            color: var(--error-color);
+            border-color: var(--error-color);
+        }
+
+        .message.success {
+            background: #f2fdf2;
+            color: var(--success-color);
+            border-color: var(--success-color);
         }
 
         .hint {
@@ -179,11 +221,15 @@
             font-size: 12px;
         }
 
-        /* ========== 主页面 ========== */
-        .dashboard-page {
+        /* ========== 通用页面结构 ========== */
+        .page {
             display: none;
             min-height: 100vh;
             background-color: var(--bg-primary);
+        }
+
+        .page.active {
+            display: block;
         }
 
         .header {
@@ -200,6 +246,31 @@
             font-weight: 900;
             letter-spacing: 3px;
             color: var(--text-primary);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back-btn {
+            padding: 8px 16px;
+            background: transparent;
+            color: var(--text-secondary);
+            border: 2px solid var(--text-secondary);
+            border-radius: 2px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .back-btn:hover {
+            background: var(--text-secondary);
+            color: white;
         }
 
         .user-info {
@@ -240,11 +311,178 @@
             letter-spacing: 2px;
         }
 
-        /* ========== 卡片容器 ========== */
+        /* ========== 模块选择页面 ========== */
+        .modules-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 40px;
+        }
+
+        .module-card {
+            background: var(--card-bg);
+            border: 3px solid var(--border-color);
+            box-shadow: 6px 6px 0 var(--border-color);
+            border-radius: 4px;
+            padding: 40px 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .module-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 10px 10px 0 var(--border-color);
+        }
+
+        .module-card .module-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .module-card h3 {
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .module-card p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ========== 海贼团列表页面 ========== */
+        .action-bar {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 30px 0;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .add-btn {
+            padding: 12px 24px;
+            background: var(--accent-warm);
+            color: white;
+            border: 2px solid var(--border-color);
+            border-radius: 2px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 3px 3px 0 var(--border-color);
+        }
+
+        .add-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 var(--border-color);
+        }
+
+        .groups-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .group-card {
+            background: var(--card-bg);
+            border: 3px solid var(--border-color);
+            box-shadow: 5px 5px 0 var(--border-color);
+            border-radius: 4px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .group-card:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 8px 8px 0 var(--border-color);
+        }
+
+        .group-card h3 {
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .group-info {
+            margin-bottom: 20px;
+        }
+
+        .group-info-item {
+            display: flex;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .group-info-item .label {
+            color: var(--text-secondary);
+            width: 80px;
+            flex-shrink: 0;
+        }
+
+        .group-info-item .value {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .group-card .bounty-tag {
+            display: inline-block;
+            background: var(--accent-warm);
+            color: white;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            border-radius: 2px;
+            margin-bottom: 15px;
+        }
+
+        .group-card-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid var(--bg-secondary);
+        }
+
+        .group-card-actions button {
+            flex: 1;
+            padding: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 2px;
+        }
+
+        .view-members-btn {
+            background: var(--accent-cool);
+            color: white;
+            border: 2px solid var(--border-color);
+        }
+
+        .view-members-btn:hover {
+            background: var(--text-primary);
+        }
+
+        /* ========== 船员列表页面 ========== */
         .crew-container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 50px 30px;
+            padding: 30px;
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 40px;
@@ -446,6 +684,117 @@
             line-height: 1.5;
         }
 
+        /* ========== 模态框 ========== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            border: 3px solid var(--border-color);
+            box-shadow: 8px 8px 0 var(--border-color);
+            border-radius: 4px;
+            width: 500px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 25px 30px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .modal-body .form-group {
+            margin-bottom: 20px;
+        }
+
+        .modal-body .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+        }
+
+        /* ========== 提示消息 ========== */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 4px;
+            border: 2px solid;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 2000;
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            background: #f2fdf2;
+            color: var(--success-color);
+            border-color: var(--success-color);
+        }
+
+        .toast.error {
+            background: #fdf2f2;
+            color: var(--error-color);
+            border-color: var(--error-color);
+        }
+
         /* ========== 动画 ========== */
         @keyframes fadeInUp {
             from {
@@ -458,7 +807,7 @@
             }
         }
 
-        .card-wrapper {
+        .card-wrapper, .group-card, .module-card {
             animation: fadeInUp 0.5s ease-out backwards;
         }
 
@@ -470,13 +819,22 @@
                 text-align: center;
             }
 
-            .crew-container {
+            .header-left {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .crew-container, .groups-container {
                 padding: 30px 20px;
                 gap: 30px;
             }
 
             .card-wrapper {
                 height: 350px;
+            }
+
+            .modal-body .form-row {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -505,24 +863,191 @@
         </div>
     </div>
 
-    <!-- 主页面 -->
-    <div class="dashboard-page" id="dashboardPage">
+    <!-- 模块选择页面 -->
+    <div class="page" id="modulesPage">
         <header class="header">
-            <h1>STRAW HAT PIRATES</h1>
+            <h1>ONE PIECE - 系统模块</h1>
             <div class="user-info">
-                <span>当前船员：<strong id="displayUsername"></strong></span>
+                <span>当前用户：<strong id="displayUsername1"></strong></span>
                 <button class="logout-btn" onclick="logout()">离船</button>
             </div>
         </header>
+        <div class="modules-container" id="modulesContainer">
+            <div class="module-card" onclick="showPirateGroupsPage()">
+                <div class="module-icon">🏴‍☠️</div>
+                <h3>海贼团管理</h3>
+                <p>查看和管理所有海贼团信息，包括船员详情、悬赏金等</p>
+            </div>
+        </div>
+    </div>
 
-        <div class="loading" id="loading">正在召集船员...</div>
+    <!-- 海贼团列表页面 -->
+    <div class="page" id="pirateGroupsPage">
+        <header class="header">
+            <div class="header-left">
+                <button class="back-btn" onclick="showModulesPage()">返回</button>
+                <h1>海贼团列表</h1>
+            </div>
+            <div class="user-info">
+                <span>当前用户：<strong id="displayUsername2"></strong></span>
+                <button class="logout-btn" onclick="logout()">离船</button>
+            </div>
+        </header>
+        <div class="action-bar">
+            <button class="add-btn" onclick="openAddGroupModal()">+ 新增海贼团</button>
+        </div>
+        <div class="loading" id="groupsLoading">正在加载海贼团...</div>
+        <div class="groups-container" id="groupsContainer"></div>
+    </div>
+
+    <!-- 船员列表页面 -->
+    <div class="page" id="crewPage">
+        <header class="header">
+            <div class="header-left">
+                <button class="back-btn" onclick="showPirateGroupsPage()">返回</button>
+                <h1 id="crewPageTitle">船员列表</h1>
+            </div>
+            <div class="user-info">
+                <span>当前用户：<strong id="displayUsername3"></strong></span>
+                <button class="logout-btn" onclick="logout()">离船</button>
+            </div>
+        </header>
+        <div class="action-bar">
+            <button class="add-btn" onclick="openAddCrewModal()">+ 新增船员</button>
+        </div>
+        <div class="loading" id="crewLoading">正在召集船员...</div>
         <div class="crew-container" id="crewContainer"></div>
     </div>
 
+    <!-- 新增海贼团模态框 -->
+    <div class="modal-overlay" id="addGroupModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>新增海贼团</h2>
+                <button class="modal-close" onclick="closeAddGroupModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addGroupForm">
+                    <div class="form-group">
+                        <label>海贼团名称 *</label>
+                        <input type="text" id="groupName" required placeholder="例如：草帽海贼团">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>船长 *</label>
+                            <input type="text" id="groupCaptain" required placeholder="例如：蒙奇·D·路飞">
+                        </div>
+                        <div class="form-group">
+                            <label>船只名称</label>
+                            <input type="text" id="groupShip" placeholder="例如：千阳号">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>总悬赏金</label>
+                            <input type="text" id="groupBounty" placeholder="例如：88.16亿贝里">
+                        </div>
+                        <div class="form-group">
+                            <label>成员数量</label>
+                            <input type="number" id="groupMemberCount" placeholder="例如：10">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>起源地</label>
+                        <input type="text" id="groupOrigin" placeholder="例如：东海">
+                    </div>
+                    <div class="form-group">
+                        <label>旗帜描述</label>
+                        <input type="text" id="groupFlag" placeholder="例如：带草帽的骷髅旗">
+                    </div>
+                    <div class="form-group">
+                        <label>海贼团介绍</label>
+                        <textarea id="groupDescription" placeholder="介绍这个海贼团的故事..."></textarea>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="secondary-btn" onclick="closeAddGroupModal()">取消</button>
+                        <button type="submit" class="primary-btn">创建海贼团</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增船员模态框 -->
+    <div class="modal-overlay" id="addCrewModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>新增船员</h2>
+                <button class="modal-close" onclick="closeAddCrewModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addCrewForm">
+                    <div class="form-group">
+                        <label>船员名称 *</label>
+                        <input type="text" id="crewName" required placeholder="例如：蒙奇·D·路飞">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>职位 *</label>
+                            <input type="text" id="crewRole" required placeholder="例如：船长">
+                        </div>
+                        <div class="form-group">
+                            <label>悬赏金</label>
+                            <input type="text" id="crewBounty" placeholder="例如：30亿贝里">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>头像URL</label>
+                        <input type="text" id="crewImageUrl" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label>角色介绍</label>
+                        <textarea id="crewDescription" placeholder="介绍这个角色..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>恶魔果实</label>
+                        <input type="text" id="crewDevilFruit" placeholder="例如：橡胶果实">
+                    </div>
+                    <div class="form-group">
+                        <label>霸气类型</label>
+                        <input type="text" id="crewHakiTypes" placeholder="例如：霸王色、武装色、见闻色">
+                    </div>
+                    <div class="form-group">
+                        <label>特殊技能</label>
+                        <input type="text" id="crewSpecialSkills" placeholder="例如：四档、五档变身">
+                    </div>
+                    <div class="form-group">
+                        <label>必杀技</label>
+                        <input type="text" id="crewSignatureMoves" placeholder="例如：橡胶火箭炮">
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="secondary-btn" onclick="closeAddCrewModal()">取消</button>
+                        <button type="submit" class="primary-btn">添加船员</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast 提示 -->
+    <div class="toast" id="toast"></div>
+
     <script>
         const API_URL = 'http://localhost:8080/api';
+        let currentGroupId = null;
+        let currentGroupName = '';
 
-        // 显示消息
+        // ========== 工具函数 ==========
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
         function showMessage(message, type) {
             const messageEl = document.getElementById('loginMessage');
             messageEl.textContent = message;
@@ -533,7 +1058,45 @@
             }, 3000);
         }
 
-        // 登录处理
+        function updateUserDisplay() {
+            const username = localStorage.getItem('username');
+            document.getElementById('displayUsername1').textContent = username;
+            document.getElementById('displayUsername2').textContent = username;
+            document.getElementById('displayUsername3').textContent = username;
+        }
+
+        // ========== 页面导航 ==========
+        function hideAllPages() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('modulesPage').classList.remove('active');
+            document.getElementById('pirateGroupsPage').classList.remove('active');
+            document.getElementById('crewPage').classList.remove('active');
+        }
+
+        function showModulesPage() {
+            hideAllPages();
+            document.getElementById('modulesPage').classList.add('active');
+            updateUserDisplay();
+        }
+
+        function showPirateGroupsPage() {
+            hideAllPages();
+            document.getElementById('pirateGroupsPage').classList.add('active');
+            updateUserDisplay();
+            loadPirateGroups();
+        }
+
+        function showCrewPage(groupId, groupName) {
+            currentGroupId = groupId;
+            currentGroupName = groupName;
+            hideAllPages();
+            document.getElementById('crewPage').classList.add('active');
+            document.getElementById('crewPageTitle').textContent = `${groupName} - 核心船员`;
+            updateUserDisplay();
+            loadCrewMembers(groupId);
+        }
+
+        // ========== 登录相关 ==========
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -552,7 +1115,7 @@
                 if (data.success) {
                     localStorage.setItem('token', data.data.token);
                     localStorage.setItem('username', data.data.user.username);
-                    showDashboard();
+                    showModulesPage();
                 } else {
                     showMessage(data.message || '登录失败', 'error');
                 }
@@ -562,96 +1125,31 @@
             }
         });
 
-        // 显示主页
-        function showDashboard() {
-            document.getElementById('loginPage').style.display = 'none';
-            document.getElementById('dashboardPage').style.display = 'block';
-            document.getElementById('displayUsername').textContent = localStorage.getItem('username');
-            loadCrewMembers();
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            hideAllPages();
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
         }
 
-        // 创建卡片
-        function createCard(member, index) {
-            const wrapper = document.createElement('div');
-            wrapper.className = 'card-wrapper';
-            wrapper.style.animationDelay = `${index * 0.1}s`;
-
-            wrapper.innerHTML = `
-                <div class="flip-card" onclick="this.classList.toggle('flipped')">
-                    <!-- 正面 - 角色名字 -->
-                    <div class="card-front">
-                        <img src="${member.image_url}" alt="${member.name}" class="character-image">
-                        <div class="character-name">${member.name}</div>
-                        <div class="character-role">${member.role}</div>
-                        <div class="click-hint">点击查看详情</div>
-                    </div>
-
-                    <!-- 背面 - 详细信息 -->
-                    <div class="card-back">
-                        <div class="back-header">
-                            <img src="${member.image_url}" alt="${member.name}">
-                            <h3>${member.name}</h3>
-                        </div>
-
-                        <div class="bounty-tag">悬赏金 ${member.bounty}</div>
-
-                        <div class="info-block">
-                            <h4>角色介绍</h4>
-                            <p>${member.description}</p>
-                        </div>
-
-                        <div class="info-block">
-                            <h4>能力</h4>
-                            <div class="abilities-list">
-                                ${member.abilities.devil_fruit ? `
-                                    <div class="ability-item">
-                                        <strong>恶魔果实</strong>
-                                        <span>${member.abilities.devil_fruit}</span>
-                                    </div>
-                                ` : ''}
-                                ${member.abilities.haki_types && member.abilities.haki_types !== '无' ? `
-                                    <div class="ability-item">
-                                        <strong>霸气</strong>
-                                        <span>${member.abilities.haki_types}</span>
-                                    </div>
-                                ` : ''}
-                                ${member.abilities.special_skills ? `
-                                    <div class="ability-item">
-                                        <strong>特殊技能</strong>
-                                        <span>${member.abilities.special_skills}</span>
-                                    </div>
-                                ` : ''}
-                                ${member.abilities.signature_moves ? `
-                                    <div class="ability-item">
-                                        <strong>必杀技</strong>
-                                        <span>${member.abilities.signature_moves}</span>
-                                    </div>
-                                ` : ''}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            return wrapper;
-        }
-
-        // 加载船员数据
-        async function loadCrewMembers() {
-            const loading = document.getElementById('loading');
-            const container = document.getElementById('crewContainer');
+        // ========== 海贼团相关 ==========
+        async function loadPirateGroups() {
+            const loading = document.getElementById('groupsLoading');
+            const container = document.getElementById('groupsContainer');
 
             loading.style.display = 'block';
             container.innerHTML = '';
 
             try {
-                const response = await fetch(`${API_URL}/crew/members`);
+                const response = await fetch(`${API_URL}/pirate-groups`);
                 const result = await response.json();
 
                 if (result.success) {
                     loading.style.display = 'none';
-                    result.data.forEach((member, index) => {
-                        const card = createCard(member, index);
+                    result.data.forEach((group, index) => {
+                        const card = createGroupCard(group, index);
                         container.appendChild(card);
                     });
                 } else {
@@ -663,18 +1161,243 @@
             }
         }
 
-        // 退出登录
-        function logout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('username');
-            document.getElementById('loginPage').style.display = 'flex';
-            document.getElementById('dashboardPage').style.display = 'none';
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-            document.getElementById('crewContainer').innerHTML = '';
+        function createGroupCard(group, index) {
+            const card = document.createElement('div');
+            card.className = 'group-card';
+            card.style.animationDelay = `${index * 0.1}s`;
+
+            card.innerHTML = `
+                <h3>${group.name}</h3>
+                <div class="bounty-tag">总悬赏 ${group.total_bounty || '未知'}</div>
+                <div class="group-info">
+                    <div class="group-info-item">
+                        <span class="label">船长：</span>
+                        <span class="value">${group.captain}</span>
+                    </div>
+                    <div class="group-info-item">
+                        <span class="label">船只：</span>
+                        <span class="value">${group.ship_name || '未知'}</span>
+                    </div>
+                    <div class="group-info-item">
+                        <span class="label">起源地：</span>
+                        <span class="value">${group.origin || '未知'}</span>
+                    </div>
+                    <div class="group-info-item">
+                        <span class="label">成员数：</span>
+                        <span class="value">${group.member_count || '未知'}</span>
+                    </div>
+                </div>
+                <div class="group-card-actions">
+                    <button class="view-members-btn" onclick="showCrewPage(${group.id}, '${group.name}')">查看船员</button>
+                </div>
+            `;
+
+            return card;
         }
 
-        // 检查登录状态
+        function openAddGroupModal() {
+            document.getElementById('addGroupModal').classList.add('active');
+        }
+
+        function closeAddGroupModal() {
+            document.getElementById('addGroupModal').classList.remove('active');
+            document.getElementById('addGroupForm').reset();
+        }
+
+        document.getElementById('addGroupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const data = {
+                name: document.getElementById('groupName').value,
+                captain: document.getElementById('groupCaptain').value,
+                ship_name: document.getElementById('groupShip').value || null,
+                total_bounty: document.getElementById('groupBounty').value || null,
+                member_count: parseInt(document.getElementById('groupMemberCount').value) || null,
+                origin: document.getElementById('groupOrigin').value || null,
+                flag_description: document.getElementById('groupFlag').value || null,
+                description: document.getElementById('groupDescription').value || null
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/pirate-groups`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('海贼团创建成功！', 'success');
+                    closeAddGroupModal();
+                    loadPirateGroups();
+                } else {
+                    showToast(result.message || '创建失败', 'error');
+                }
+            } catch (error) {
+                showToast('无法连接到服务器', 'error');
+                console.error('Error:', error);
+            }
+        });
+
+        // ========== 船员相关 ==========
+        async function loadCrewMembers(groupId) {
+            const loading = document.getElementById('crewLoading');
+            const container = document.getElementById('crewContainer');
+
+            loading.style.display = 'block';
+            container.innerHTML = '';
+
+            try {
+                const response = await fetch(`${API_URL}/pirate-groups/${groupId}/members`);
+                const result = await response.json();
+
+                if (result.success) {
+                    loading.style.display = 'none';
+                    if (result.data.length === 0) {
+                        container.innerHTML = '<div class="loading">暂无船员信息</div>';
+                    } else {
+                        result.data.forEach((member, index) => {
+                            const card = createCrewCard(member, index);
+                            container.appendChild(card);
+                        });
+                    }
+                } else {
+                    loading.textContent = '加载失败';
+                }
+            } catch (error) {
+                loading.textContent = '无法连接到服务器';
+                console.error('Error:', error);
+            }
+        }
+
+        function createCrewCard(member, index) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'card-wrapper';
+            wrapper.style.animationDelay = `${index * 0.1}s`;
+
+            const abilities = member.abilities || {};
+            const imageUrl = member.image_url || 'https://via.placeholder.com/120?text=?';
+
+            wrapper.innerHTML = `
+                <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                    <!-- 正面 - 角色名字 -->
+                    <div class="card-front">
+                        <img src="${imageUrl}" alt="${member.name}" class="character-image" onerror="this.src='https://via.placeholder.com/120?text=?'">
+                        <div class="character-name">${member.name}</div>
+                        <div class="character-role">${member.role}</div>
+                        <div class="click-hint">点击查看详情</div>
+                    </div>
+
+                    <!-- 背面 - 详细信息 -->
+                    <div class="card-back">
+                        <div class="back-header">
+                            <img src="${imageUrl}" alt="${member.name}" onerror="this.src='https://via.placeholder.com/50?text=?'">
+                            <h3>${member.name}</h3>
+                        </div>
+
+                        <div class="bounty-tag">悬赏金 ${member.bounty || '未知'}</div>
+
+                        <div class="info-block">
+                            <h4>角色介绍</h4>
+                            <p>${member.description || '暂无介绍'}</p>
+                        </div>
+
+                        <div class="info-block">
+                            <h4>能力</h4>
+                            <div class="abilities-list">
+                                ${abilities.devil_fruit ? `
+                                    <div class="ability-item">
+                                        <strong>恶魔果实</strong>
+                                        <span>${abilities.devil_fruit}</span>
+                                    </div>
+                                ` : ''}
+                                ${abilities.haki_types && abilities.haki_types !== '无' ? `
+                                    <div class="ability-item">
+                                        <strong>霸气</strong>
+                                        <span>${abilities.haki_types}</span>
+                                    </div>
+                                ` : ''}
+                                ${abilities.special_skills ? `
+                                    <div class="ability-item">
+                                        <strong>特殊技能</strong>
+                                        <span>${abilities.special_skills}</span>
+                                    </div>
+                                ` : ''}
+                                ${abilities.signature_moves ? `
+                                    <div class="ability-item">
+                                        <strong>必杀技</strong>
+                                        <span>${abilities.signature_moves}</span>
+                                    </div>
+                                ` : ''}
+                                ${!abilities.devil_fruit && !abilities.haki_types && !abilities.special_skills && !abilities.signature_moves ? `
+                                    <div class="ability-item">
+                                        <span>暂无能力信息</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            return wrapper;
+        }
+
+        function openAddCrewModal() {
+            document.getElementById('addCrewModal').classList.add('active');
+        }
+
+        function closeAddCrewModal() {
+            document.getElementById('addCrewModal').classList.remove('active');
+            document.getElementById('addCrewForm').reset();
+        }
+
+        document.getElementById('addCrewForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const data = {
+                name: document.getElementById('crewName').value,
+                role: document.getElementById('crewRole').value,
+                bounty: document.getElementById('crewBounty').value || null,
+                image_url: document.getElementById('crewImageUrl').value || null,
+                description: document.getElementById('crewDescription').value || null,
+                devil_fruit: document.getElementById('crewDevilFruit').value || null,
+                haki_types: document.getElementById('crewHakiTypes').value || null,
+                special_skills: document.getElementById('crewSpecialSkills').value || null,
+                signature_moves: document.getElementById('crewSignatureMoves').value || null,
+                pirate_group_id: currentGroupId
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/crew`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('船员添加成功！', 'success');
+                    closeAddCrewModal();
+                    loadCrewMembers(currentGroupId);
+                } else {
+                    showToast(result.message || '添加失败', 'error');
+                }
+            } catch (error) {
+                showToast('无法连接到服务器', 'error');
+                console.error('Error:', error);
+            }
+        });
+
+        // ========== 初始化 ==========
         window.addEventListener('load', async () => {
             const token = localStorage.getItem('token');
             if (token) {
@@ -684,7 +1407,7 @@
                     });
                     const data = await response.json();
                     if (data.success) {
-                        showDashboard();
+                        showModulesPage();
                     } else {
                         localStorage.removeItem('token');
                         localStorage.removeItem('username');
