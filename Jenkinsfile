@@ -20,15 +20,10 @@ pipeline {
                 }
             }
             steps {
-                sh 'pip install --upgrade pip'
-                sh 'pip install -r requirements.txt'
-                
-                // 代码风格检查
-                sh 'flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics'
-                sh 'flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics'
-                
-                // 单元测试
-                sh 'pytest'
+                // 使用 Makefile 命令，更加简洁
+                sh 'make install'
+                sh 'make lint'
+                sh 'make test'
             }
         }
 
@@ -44,13 +39,12 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         sh "docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}"
                         
-                        // 构建镜像，使用 Build Number 作为版本号
-                        sh "docker build -t ${DOCKER_USER}/${IMAGE_NAME}:${BUILD_NUMBER} ."
-                        sh "docker build -t ${DOCKER_USER}/${IMAGE_NAME}:latest ."
+                        // 使用 Makefile 命令进行构建和推送
+                        sh "make docker-build IMAGE=${DOCKER_USER}/${IMAGE_NAME} TAG=${BUILD_NUMBER}"
+                        sh "make docker-build IMAGE=${DOCKER_USER}/${IMAGE_NAME} TAG=latest"
                         
-                        // 推送镜像
-                        sh "docker push ${DOCKER_USER}/${IMAGE_NAME}:${BUILD_NUMBER}"
-                        sh "docker push ${DOCKER_USER}/${IMAGE_NAME}:latest"
+                        sh "make docker-push IMAGE=${DOCKER_USER}/${IMAGE_NAME} TAG=${BUILD_NUMBER}"
+                        sh "make docker-push IMAGE=${DOCKER_USER}/${IMAGE_NAME} TAG=latest"
                     }
                 }
             }
