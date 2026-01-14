@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory, jsonify, request
+from flask import Flask, send_from_directory, jsonify, request, redirect
 from flask_cors import CORS
 from onepiece.config import Config
 from onepiece.models import db, init_db
@@ -29,6 +29,25 @@ def create_app():
 
     # 自动发现并注册所有蓝图
     register_blueprints(app)
+
+    # 根路径重定向到前端页面
+    @app.route('/')
+    def index():
+        return redirect('/frontend/')
+
+    # 前端静态文件服务
+    @app.route('/frontend/')
+    def serve_frontend():
+        return send_from_directory('../frontend', 'index.html')
+
+    @app.route('/frontend/<path:filename>')
+    def serve_frontend_files(filename):
+        return send_from_directory('../frontend', filename)
+
+    # 图片静态文件服务
+    @app.route('/images/<path:filename>')
+    def serve_images(filename):
+        return send_from_directory('../frontend/public/images', filename)
 
     # 请求前日志 - 记录每个进入的请求
     @app.before_request
