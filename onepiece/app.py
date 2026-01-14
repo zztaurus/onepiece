@@ -2,7 +2,7 @@ from flask import Flask, send_from_directory, jsonify, request, redirect
 from flask_cors import CORS
 from onepiece.config import Config
 from onepiece.models import db, init_db
-from onepiece.controllers.registry import register_blueprints
+from onepiece.views.registry import register_blueprints
 import logging
 
 # 配置日志

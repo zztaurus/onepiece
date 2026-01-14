@@ -1,16 +1,5 @@
 """
 蓝图自动发现与注册器
-
-使用方式：
-1. 在 controller 文件中定义蓝图时，添加 BLUEPRINT_CONFIG：
-
-   auth_bp = Blueprint('auth', __name__)
-   BLUEPRINT_CONFIG = {
-       'blueprint': auth_bp,
-       'prefix': '/api/auth'
-   }
-
-2. 在 app.py 中调用 register_blueprints(app) 即可自动注册所有蓝图
 """
 import os
 import importlib
@@ -22,19 +11,23 @@ logger = logging.getLogger(__name__)
 
 def discover_blueprints():
     """
-    自动发现 controllers 目录下所有蓝图
+    自动发现 views 目录下所有蓝图
     返回: [(blueprint, prefix), ...]
     """
     blueprints = []
-    controllers_dir = Path(__file__).parent
-
-    # 扫描所有 *_controller.py 文件
-    for file in controllers_dir.glob('*_controller.py'):
-        module_name = file.stem  # 如 auth_controller
+    # 获取 views 目录路径
+    views_dir = Path(__file__).parent
+    
+    # 扫描所有 .py 文件 (排除 __init__.py 和 registry.py)
+    for file in views_dir.glob('*.py'):
+        if file.name in ['__init__.py', 'registry.py']:
+            continue
+            
+        module_name = file.stem  # 如 index, common
 
         try:
-            # 动态导入模块
-            module = importlib.import_module(f'onepiece.controllers.{module_name}')
+            # 动态导入模块: onepiece.views.xxx
+            module = importlib.import_module(f'onepiece.views.{module_name}')
 
             # 检查是否有 BLUEPRINT_CONFIG
             if hasattr(module, 'BLUEPRINT_CONFIG'):
