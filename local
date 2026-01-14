@@ -1,0 +1,57 @@
+# 安装依赖
+pip install -r requirements.txt
+
+# 确保MySQL服务已启动，并创建数据库
+mysql -u root -p
+CREATE DATABASE onepiece_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'onepiece_user'@'localhost' IDENTIFIED BY 'onepiece_pass_2024';
+GRANT ALL PRIVILEGES ON onepiece_db.* TO 'onepiece_user'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+
+# 启动应用
+python app.py
+```
+
+## 🗄️ 数据库设计
+
+### 1. users表（用户表）
+- id - 主键
+- username - 用户名（唯一）
+- password - 密码
+- created_at - 创建时间
+
+### 2. pirate_groups表（海贼团表）⭐新增⭐
+- id - 主键
+- name - 海贼团名称（唯一）
+- captain - 船长
+- ship_name - 船名
+- total_bounty - 总悬赏金
+- flag_description - 海贼旗描述
+- origin - 起源地
+- member_count - 成员数量
+- description - 描述
+- created_at - 创建时间
+
+### 3. crew_members表（船员表）
+- id - 主键
+- name - 姓名
+- role - 职位
+- bounty - 悬赏金
+- image_url - 头像URL
+- description - 描述
+- devil_fruit - 恶魔果实
+- haki_types - 霸气类型
+- special_skills - 特殊技能
+- signature_moves - 必杀技
+- **pirate_group_id** - 外键（关联海贼团）
+- created_at - 创建时间
+
+## 🔑 数据库配置信息
+```
+数据库名：onepiece_db
+用户名：onepiece_user
+密码：onepiece_pass_2024
+Root密码：root_password_2024
+端口：3306
+字符集：utf8mb4

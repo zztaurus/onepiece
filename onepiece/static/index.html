@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>海贼王 - 船员图鉴</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* 低饱和度配色方案 */
+            --bg-primary: #f5f3f0;
+            --bg-secondary: #e8e4df;
+            --text-primary: #3d3a36;
+            --text-secondary: #6b6560;
+            --accent-warm: #c4a77d;
+            --accent-cool: #7d9eb2;
+            --accent-soft: #b8a9c4;
+            --border-color: #3d3a36;
+            --card-bg: #faf9f7;
+            --shadow-color: rgba(61, 58, 54, 0.15);
+        }
+
+        body {
+            font-family: 'Helvetica Neue', 'Microsoft YaHei', sans-serif;
+            min-height: 100vh;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        /* ========== 漫画风格元素 ========== */
+        .comic-border {
+            border: 3px solid var(--border-color);
+            box-shadow: 4px 4px 0 var(--border-color);
+        }
+
+        .comic-border-thin {
+            border: 2px solid var(--border-color);
+            box-shadow: 3px 3px 0 var(--border-color);
+        }
+
+        /* 网点背景 */
+        .halftone-bg {
+            background-image: radial-gradient(circle, var(--text-secondary) 1px, transparent 1px);
+            background-size: 8px 8px;
+        }
+
+        /* ========== 登录页面 ========== */
+        .login-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--bg-secondary);
+            position: relative;
+        }
+
+        .login-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(circle, var(--text-secondary) 1px, transparent 1px);
+            background-size: 12px 12px;
+            opacity: 0.3;
+        }
+
+        .login-container {
+            background: var(--card-bg);
+            padding: 50px 45px;
+            border-radius: 4px;
+            width: 420px;
+            max-width: 90%;
+            position: relative;
+            z-index: 1;
+            border: 3px solid var(--border-color);
+            box-shadow: 6px 6px 0 var(--border-color);
+        }
+
+        .login-title {
+            font-size: 32px;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 8px;
+            letter-spacing: 4px;
+            color: var(--text-primary);
+        }
+
+        .login-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 35px;
+            font-style: italic;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 2px;
+            font-size: 16px;
+            background: white;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            box-shadow: 3px 3px 0 var(--border-color);
+            transform: translate(-2px, -2px);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--text-primary);
+            color: white;
+            border: none;
+            border-radius: 2px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 5px 5px 0 var(--accent-warm);
+        }
+
+        .login-btn:active {
+            transform: translate(0, 0);
+            box-shadow: none;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 2px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 14px;
+            border: 2px solid;
+        }
+
+        .message.error {
+            background: #fdf2f2;
+            color: #9b4d4d;
+            border-color: #9b4d4d;
+        }
+
+        .hint {
+            text-align: center;
+            margin-top: 25px;
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        /* ========== 主页面 ========== */
+        .dashboard-page {
+            display: none;
+            min-height: 100vh;
+            background-color: var(--bg-primary);
+        }
+
+        .header {
+            background: var(--card-bg);
+            padding: 25px 40px;
+            border-bottom: 3px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            color: var(--text-primary);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info span {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 2px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logout-btn:hover {
+            background: var(--text-primary);
+            color: white;
+        }
+
+        .loading {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 16px;
+            padding: 60px;
+            letter-spacing: 2px;
+        }
+
+        /* ========== 卡片容器 ========== */
+        .crew-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 50px 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 40px;
+        }
+
+        /* ========== 翻转卡片 ========== */
+        .card-wrapper {
+            perspective: 1000px;
+            height: 380px;
+        }
+
+        .flip-card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .flip-card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        /* ========== 卡片正面 - 角色名字 ========== */
+        .card-front {
+            background: var(--card-bg);
+            border: 3px solid var(--border-color);
+            box-shadow: 6px 6px 0 var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .card-front:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 9px 9px 0 var(--border-color);
+        }
+
+        .card-front .character-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--border-color);
+            margin-bottom: 20px;
+            filter: grayscale(20%);
+            transition: all 0.3s ease;
+        }
+
+        .card-front:hover .character-image {
+            filter: grayscale(0%);
+            transform: scale(1.05);
+        }
+
+        .card-front .character-name {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: var(--text-primary);
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .card-front .character-role {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .card-front .click-hint {
+            position: absolute;
+            bottom: 20px;
+            font-size: 11px;
+            color: var(--accent-warm);
+            letter-spacing: 1px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card-front:hover .click-hint {
+            opacity: 1;
+        }
+
+        /* ========== 卡片背面 - 详细信息 ========== */
+        .card-back {
+            background: var(--card-bg);
+            border: 3px solid var(--border-color);
+            box-shadow: 6px 6px 0 var(--border-color);
+            transform: rotateY(180deg);
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        .card-back::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .card-back::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        .card-back::-webkit-scrollbar-thumb {
+            background: var(--text-secondary);
+            border-radius: 3px;
+        }
+
+        .card-back .back-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .card-back .back-header img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border-color);
+        }
+
+        .card-back .back-header h3 {
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .bounty-tag {
+            display: inline-block;
+            background: var(--accent-warm);
+            color: white;
+            padding: 6px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            border-radius: 2px;
+        }
+
+        .info-block {
+            margin-bottom: 15px;
+        }
+
+        .info-block h4 {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .info-block p {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .abilities-list {
+            background: var(--bg-secondary);
+            padding: 12px;
+            border-radius: 2px;
+            border-left: 3px solid var(--accent-cool);
+        }
+
+        .ability-item {
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .ability-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .ability-item strong {
+            color: var(--text-secondary);
+            font-size: 11px;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .ability-item span {
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        /* ========== 动画 ========== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-wrapper {
+            animation: fadeInUp 0.5s ease-out backwards;
+        }
+
+        /* ========== 响应式 ========== */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .crew-container {
+                padding: 30px 20px;
+                gap: 30px;
+            }
+
+            .card-wrapper {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 登录页面 -->
+    <div class="login-page" id="loginPage">
+        <div class="login-container">
+            <h2 class="login-title">ONE PIECE</h2>
+            <p class="login-subtitle">- 船员图鉴系统 -</p>
+            <div class="message" id="loginMessage"></div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>船员名称</label>
+                    <input type="text" id="username" name="username" required placeholder="输入用户名">
+                </div>
+                <div class="form-group">
+                    <label>通行密码</label>
+                    <input type="password" id="password" name="password" required placeholder="输入密码">
+                </div>
+                <button type="submit" class="login-btn">登 录</button>
+            </form>
+            <div class="hint">
+                测试账号：admin / admin123
+            </div>
+        </div>
+    </div>
+
+    <!-- 主页面 -->
+    <div class="dashboard-page" id="dashboardPage">
+        <header class="header">
+            <h1>STRAW HAT PIRATES</h1>
+            <div class="user-info">
+                <span>当前船员：<strong id="displayUsername"></strong></span>
+                <button class="logout-btn" onclick="logout()">离船</button>
+            </div>
+        </header>
+
+        <div class="loading" id="loading">正在召集船员...</div>
+        <div class="crew-container" id="crewContainer"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8080/api';
+
+        // 显示消息
+        function showMessage(message, type) {
+            const messageEl = document.getElementById('loginMessage');
+            messageEl.textContent = message;
+            messageEl.className = `message ${type}`;
+            messageEl.style.display = 'block';
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 3000);
+        }
+
+        // 登录处理
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    localStorage.setItem('token', data.data.token);
+                    localStorage.setItem('username', data.data.user.username);
+                    showDashboard();
+                } else {
+                    showMessage(data.message || '登录失败', 'error');
+                }
+            } catch (error) {
+                showMessage('无法连接到服务器', 'error');
+                console.error('Error:', error);
+            }
+        });
+
+        // 显示主页
+        function showDashboard() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('dashboardPage').style.display = 'block';
+            document.getElementById('displayUsername').textContent = localStorage.getItem('username');
+            loadCrewMembers();
+        }
+
+        // 创建卡片
+        function createCard(member, index) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'card-wrapper';
+            wrapper.style.animationDelay = `${index * 0.1}s`;
+
+            wrapper.innerHTML = `
+                <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                    <!-- 正面 - 角色名字 -->
+                    <div class="card-front">
+                        <img src="${member.image_url}" alt="${member.name}" class="character-image">
+                        <div class="character-name">${member.name}</div>
+                        <div class="character-role">${member.role}</div>
+                        <div class="click-hint">点击查看详情</div>
+                    </div>
+
+                    <!-- 背面 - 详细信息 -->
+                    <div class="card-back">
+                        <div class="back-header">
+                            <img src="${member.image_url}" alt="${member.name}">
+                            <h3>${member.name}</h3>
+                        </div>
+
+                        <div class="bounty-tag">悬赏金 ${member.bounty}</div>
+
+                        <div class="info-block">
+                            <h4>角色介绍</h4>
+                            <p>${member.description}</p>
+                        </div>
+
+                        <div class="info-block">
+                            <h4>能力</h4>
+                            <div class="abilities-list">
+                                ${member.abilities.devil_fruit ? `
+                                    <div class="ability-item">
+                                        <strong>恶魔果实</strong>
+                                        <span>${member.abilities.devil_fruit}</span>
+                                    </div>
+                                ` : ''}
+                                ${member.abilities.haki_types && member.abilities.haki_types !== '无' ? `
+                                    <div class="ability-item">
+                                        <strong>霸气</strong>
+                                        <span>${member.abilities.haki_types}</span>
+                                    </div>
+                                ` : ''}
+                                ${member.abilities.special_skills ? `
+                                    <div class="ability-item">
+                                        <strong>特殊技能</strong>
+                                        <span>${member.abilities.special_skills}</span>
+                                    </div>
+                                ` : ''}
+                                ${member.abilities.signature_moves ? `
+                                    <div class="ability-item">
+                                        <strong>必杀技</strong>
+                                        <span>${member.abilities.signature_moves}</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            return wrapper;
+        }
+
+        // 加载船员数据
+        async function loadCrewMembers() {
+            const loading = document.getElementById('loading');
+            const container = document.getElementById('crewContainer');
+
+            loading.style.display = 'block';
+            container.innerHTML = '';
+
+            try {
+                const response = await fetch(`${API_URL}/crew/members`);
+                const result = await response.json();
+
+                if (result.success) {
+                    loading.style.display = 'none';
+                    result.data.forEach((member, index) => {
+                        const card = createCard(member, index);
+                        container.appendChild(card);
+                    });
+                } else {
+                    loading.textContent = '加载失败';
+                }
+            } catch (error) {
+                loading.textContent = '无法连接到服务器';
+                console.error('Error:', error);
+            }
+        }
+
+        // 退出登录
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('dashboardPage').style.display = 'none';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('crewContainer').innerHTML = '';
+        }
+
+        // 检查登录状态
+        window.addEventListener('load', async () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    const response = await fetch(`${API_URL}/auth/verify`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        showDashboard();
+                    } else {
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('username');
+                    }
+                } catch (error) {
+                    console.error('Token验证失败:', error);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  # MySQL数据库服务
+  mysql:
+    image: mysql:8.0
+    container_name: onepiece_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password_2024
+      MYSQL_DATABASE: onepiece_db
+      MYSQL_USER: onepiece_user
+      MYSQL_PASSWORD: onepiece_pass_2024
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+      - --max_connections=1000
+      - --innodb_buffer_pool_size=256M
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "onepiece_user", "-ponepiece_pass_2024"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+    networks:
+      - onepiece_network
+
+  # Flask应用服务
+  flask_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: onepiece_flask
+    restart: always
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_USER: onepiece_user
+      MYSQL_PASSWORD: onepiece_pass_2024
+      MYSQL_DATABASE: onepiece_db
+      SECRET_KEY: onepiece-secret-key-production-2024
+      FLASK_ENV: production
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - ./static:/app/static
+    networks:
+      - onepiece_network
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  onepiece_network:
+    driver: bridge
