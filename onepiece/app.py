@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 def create_app():
     """应用工厂函数"""
-    app = Flask(__name__, static_folder='static')
+    app = Flask(__name__)
 
     # 加载配置
     app.config.from_object(Config)

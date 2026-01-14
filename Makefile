@@ -1,4 +1,4 @@
-.PHONY: help build up down logs restart clean install lint test docker-build docker-push
+.PHONY: help build up down logs restart clean install lint test docker-build docker-push frontend-install frontend-dev
 
 # 默认变量
 IMAGE ?= simple-flask-project
@@ -7,11 +7,14 @@ TAG ?= latest
 help:  ## 显示帮助信息
 	@echo "可用命令："
 	@echo "  make build         - 构建Docker镜像 (docker-compose)"
-	@echo "  make up            - 启动所有服务"
+	@echo "  make up            - 启动所有后端服务"
 	@echo "  make down          - 停止所有服务"
 	@echo "  make logs          - 查看日志"
 	@echo "  make restart       - 重启服务"
 	@echo "  make clean         - 清理所有容器和数据卷"
+	@echo "  --- 前端开发 ---"
+	@echo "  make frontend-install - 安装前端依赖"
+	@echo "  make frontend-dev     - 启动前端开发服务器 (带代理)"
 	@echo "  --- CI/CD 命令 ---"
 	@echo "  make install       - 安装 Python 依赖"
 	@echo "  make lint          - 运行代码检查"
@@ -24,7 +27,8 @@ build:  ## 构建Docker镜像 (本地开发用)
 
 up:  ## 启动所有服务
 	docker-compose up -d
-	@echo "✅ 服务已启动！访问 http://localhost:8080"
+	@echo "✅ 后端服务已启动！访问 http://localhost:8080 (仅API)"
+	@echo "💡 提示: 运行 'make frontend-dev' 启动前端开发页面"
 
 down:  ## 停止所有服务
 	docker-compose down
@@ -38,6 +42,14 @@ restart:  ## 重启服务
 clean:  ## 清理所有容器和数据卷
 	docker-compose down -v
 	docker system prune -f
+
+# --- 前端开发 ---
+
+frontend-install: ## 安装前端依赖
+	cd frontend && npm install
+
+frontend-dev: ## 启动前端开发服务器 (带代理)
+	cd frontend && npm run dev
 
 # --- CI/CD 专用命令 ---
 
